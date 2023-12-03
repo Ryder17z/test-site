@@ -1,6 +1,0 @@
-defaults:
- -
-   scope:
-     path: "_posts" # to all the file in posts
-   values:
-     permalink: /landing/:categories/:title.html # set this as default permalink value
