@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Fields</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <form id="myForm" onsubmit="return validateForm()">
+        <div>
+            <label for="input">Input (multiple lines):</label>
+            <textarea id="input" rows="4" placeholder="Enter multiple lines of text..."></textarea>
+
+            <label for="delimiter">Delimiter (single line):</label>
+            <input type="text" id="delimiter" placeholder="Enter a single line delimiter...">
+
+            <!-- New input for "ignore lines starting with" -->
+            <label for="ignoreLines">Ignore lines starting with:</label>
+            <textarea id="ignoreLines" rows="2" placeholder="Enter lines to ignore..."></textarea>
+        </div>
+
+        <div>
+            <label for="output">Output (multiple lines):</label>
+            <textarea id="output" rows="4" readonly></textarea>
+
+            <label for="progress">Progress (multiple lines):</label>
+            <textarea id="progress" rows="4" readonly></textarea>
+        </div>
+
+        <div class="button-container">
+            <button type="button" onclick="resetForm()">Reset</button>
+            <button type="button" onclick="performSwap()">Swap Sides</button>
+        </div>
+    </form>
+
+    <script>
+        function resetForm() {
+            document.getElementById("myForm").reset();
+            document.getElementById("progress").value = "";
+        }
+
+        function validateForm() {
+            var delimiterValue = document.getElementById("delimiter").value;
+            var progressField = document.getElementById("progress");
+
+            if (delimiterValue.trim() === "") {
+                progressField.value = "Error: Delimiter field cannot be empty.";
+                return false; // Prevent form submission
+            }
+
+            // Clear any previous error messages
+            progressField.value = "";
+            return true; // Allow form submission
+        }
+
+        function performSwap() {
+            var delimiterValue = document.getElementById("delimiter").value;
+            var ignoreLinesValue = document.getElementById("ignoreLines").value;
+
+            if (delimiterValue.trim() === "") {
+                document.getElementById("progress").value = "Error: Delimiter field cannot be empty.";
+                return;
+            }
+
+            var inputValue = document.getElementById("input").value;
+            var outputField = document.getElementById("output");
+            var progressField = document.getElementById("progress");
+
+            if (inputValue.trim() === "") {
+                alert("Error: Input field cannot be empty.");
+                return;
+            }
+
+            // Escape special characters in the delimiter for use in a regular expression
+            var escapedDelimiter = escapeRegExp(delimiterValue);
+
+            var ignoreLinesRegex = new RegExp('^(' + ignoreLinesValue.trim().split('\n').map(escapeRegExp).join('|') + ').*$', 'gm');
+
+            var lines = inputValue.split('\n');
+            var swappedLines = lines.map(function (line) {
+                if (line.match(ignoreLinesRegex)) {
+                    return line;
+                }
+
+                var regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?$');
+                var match = line.match(regex);
+
+                if (match) {
+                    var firstPart = match[2].trim();
+                    var secondPart = match[1].trim();
+
+                    return firstPart + " " + delimiterValue + " " + secondPart + (match[3] || '');
+                } else {
+                    return line;
+                }
+            });
+
+            outputField.value = swappedLines.join('\n');
+            progressField.value = "Swap completed with delimiter: '" + delimiterValue + "'";
+        }
+
+        // Function to escape special characters in a string for use in a regular expression
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+    </script>
+</body>
+</html>
