@@ -76,44 +76,46 @@
             return true; // Allow form submission
         }
 
-        function performSwap() {
-            var delimiterValue = document.getElementById("delimiter").value;
+function performSwap() {
+    var delimiterValue = document.getElementById("delimiter").value;
 
-            if (delimiterValue.trim() === "") {
-                document.getElementById("progress").value = "Error: Delimiter field cannot be empty.";
-                return;
-            }
+    if (delimiterValue.trim() === "") {
+        document.getElementById("progress").value = "Error: Delimiter field cannot be empty.";
+        return;
+    }
 
-            var inputValue = document.getElementById("input").value;
-            var outputField = document.getElementById("output");
-            var progressField = document.getElementById("progress");
+    var inputValue = document.getElementById("input").value;
+    var outputField = document.getElementById("output");
+    var progressField = document.getElementById("progress");
 
-            if (inputValue.trim() === "") {
-                alert("Error: Input field cannot be empty.");
-                return;
-            }
+    if (inputValue.trim() === "") {
+        alert("Error: Input field cannot be empty.");
+        return;
+    }
 
-            // Escape special characters in the delimiter for use in a regular expression
-            var escapedDelimiter = escapeRegExp(delimiterValue);
+    // Escape special characters in the delimiter for use in a regular expression
+    var escapedDelimiter = escapeRegExp(delimiterValue);
 
-            var lines = inputValue.split('\n');
-            var swappedLines = lines.map(function (line) {
-                var regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?);?$');
-                var match = line.match(regex);
+    var lines = inputValue.split('\n');
+    var swappedLines = lines.map(function (line) {
+        var regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?$');
+        var match = line.match(regex);
 
-                if (match) {
-                    var firstPart = match[2].trim();
-                    var secondPart = match[1].trim();
+        if (match) {
+            var firstPart = match[2].trim();
+            var secondPart = match[1].trim();
 
-                    return firstPart + " " + delimiterValue + " " + secondPart + ';';
-                } else {
-                    return line;
-                }
-            });
-
-            outputField.value = swappedLines.join('\n');
-            progressField.value = "Swap completed with delimiter: '" + delimiterValue + "'";
+            return firstPart + " " + delimiterValue + " " + secondPart + (match[3] || '');
+        } else {
+            return line;
         }
+    });
+
+    outputField.value = swappedLines.join('\n');
+    progressField.value = "Swap completed with delimiter: '" + delimiterValue + "'";
+}
+
+  
 
         // Function to escape special characters in a string for use in a regular expression
         function escapeRegExp(string) {
