@@ -116,20 +116,21 @@
                 }
 
                 var regexPattern = partialMatch
-                    ? '^(.*?)(?:' + escapedDelimiter + ')(.*?)(;)?$'
-                    : '^(.*?)' + escapedDelimiter + '(.*?)(;)?$';
+    ? '^(.*?)(?:' + escapedDelimiter + ')(.*?)(;)?$'
+    : '^(.*?)' + escapedDelimiter + '(.*?)(;)?$';
 
-                var regex = new RegExp(regexPattern);
-                var match = line.match(regex);
+var regex = new RegExp(regexPattern);
+var match = line.match(regex);
 
-                if (match) {
-                    var firstPart = match[2].trim();
-                    var secondPart = match[1].trim();
+if (match) {
+    var firstPart = match[1].trim();  // Corrected index
+    var secondPart = match[2].trim(); // Corrected index
 
-                    return firstPart + " " + delimiterValue + " " + secondPart + (match[3] || '');
-                } else {
-                    return line;
-                }
+    return firstPart + " " + delimiterValue + " " + secondPart + (match[3] || '');
+} else {
+    return line;
+}
+
             });
 
             outputField.value = swappedLines.join('\n');
