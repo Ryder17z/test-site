@@ -56,6 +56,7 @@
         </div>
     </form>
 
+
 <script>
     function resetForm() {
         document.getElementById("myForm").reset();
@@ -94,10 +95,10 @@
                 var secondPart = parts[0].trim();
                 
                 // Check if semicolon exists at the end of the second part
-                if (secondPart.endsWith(';')) {
+                if (!secondPart.endsWith(';')) {
                     return firstPart + " " + delimiterValue + " " + secondPart;
                 } else {
-                    return firstPart + " " + delimiterValue + " " + secondPart + ';';
+                    return firstPart + " " + delimiterValue + " " + secondPart;
                 }
             } else {
                 return line;
@@ -107,6 +108,7 @@
         outputField.value = swappedLines.join('\n');
     }
 </script>
+
 
 </body>
 </html>
