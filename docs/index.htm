@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="UTF-8">
+	<title>test page</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+<div id="output1"></div>
+-------------------------
+<div id="output2"></div>
+
+<table id="animeTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Episodes</th>
+                <th>My Score</th>
+                <th>Avg. Score</th>
+                <th>Genres</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Media Type</th>
+                <th>My Tags</th>
+                <th>Started Airing</th>
+                <th>Ended Airing</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+</table>
+
+<script>
+$(document).ready(function() {
+    // Load the data.htm file using jQuery's AJAX method
+    $.ajax({
+        url: 'MAL/TheExileFox\'s Anime List - MyAnimeList.net.html',
+        dataType: 'html',
+         success: function(data) {
+            // Find the index of the line containing <div class="list-stats">
+            var startIndex = data.indexOf('<div class="list-stats">');
+            
+            // Find the index of the line containing <tbody>
+            var stopIndex = data.indexOf('<tbody>', startIndex);
+            
+            // Extract the content between startIndex and stopIndex
+            var content = data.substring(startIndex, stopIndex);
+            
+             // Find the index of the line containing </div>
+            var splitIndex = content.indexOf('</div>') + '</div>'.length;
+            
+            // Split the content into two parts
+            var part1 = content.substring(0, splitIndex);
+            var part2 = content.substring(splitIndex);
+            
+            // Display the two parts in separate output divs
+            $('#output1').html(part1);
+            
+            // Process and extract the JSON data from part2
+            var jsonStart = part2.indexOf('data-items="') + 'data-items="'.length;
+            var jsonEnd = part2.indexOf('" data-broadcasts=', jsonStart);
+            var jsonData = part2.substring(jsonStart, jsonEnd);
+            jsonData = jsonData.replace(/&quot;/g, '"'); // Replace &quot; with "
+            
+            // Parse the JSON data
+            var animeData = JSON.parse(jsonData);
+            
+            // Process and display the animeData
+            var tableBody = $('#animeTable tbody');
+
+            animeData.forEach(function(anime) {
+			    var genres = anime.genres.map(function(genre) {
+			        return genre.name;
+			    }).join(', ');
+
+			    var title = anime.anime_title_eng || anime.anime_title;
+			    if (anime.anime_title_eng && anime.anime_title) {
+			        title = anime.anime_title + '\n' + anime.anime_title_eng;
+			    }
+			    title = decodeHtmlEntities(title);
+
+			    // Create a new cell and set its content with line breaks
+			    var titleCell = $('<td>').css('white-space', 'pre-line', 'padding-bottom: 5px').text(title);
+
+			    var newRow = $('<tr>').append(
+			        titleCell,
+			        $('<td>').text(anime.anime_num_episodes),
+			        $('<td>').text(anime.score),
+			        $('<td>').text(anime.anime_score_val),
+			        $('<td>').text(genres),
+			        $('<td>').text(anime.start_date_string),
+			        $('<td>').text(anime.finish_date_string),
+			        $('<td>').text(anime.anime_media_type_string),
+			        $('<td>').text(anime.tags),
+			        $('<td>').text(anime.anime_start_date_string),
+			        $('<td>').text(anime.anime_end_date_string)
+			    );
+
+			    tableBody.append(newRow);
+			});
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.error('Error loading data.htm:', errorThrown);
+        }
+    });
+});
+
+// Function to decode HTML entities
+function decodeHtmlEntities(text) {
+    var doc = new DOMParser().parseFromString(text, 'text/html');
+    return doc.documentElement.textContent;
+}
+
+$(document).ready(function() {
+    $("footer div").html("This page was last modified on: "+document.lastModified);
+});
+
+</script>
+
+<p>hi</p>
+
+<footer>
+<p>hello</p><br>
+<div></div>
+</footer>
+
+</body>
+</html>

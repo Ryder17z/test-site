@@ -1,0 +1,8 @@
+#animeTable tbody tr:nth-child(odd) {
+    background-color: lightgray;
+}
+
+.separator {
+    border-top: 1px solid black;
+    padding-top: 10px; /* Optional: Add some padding for spacing */
+}
