@@ -56,6 +56,7 @@
         </div>
     </form>
 
+
 <script>
     function resetForm() {
         document.getElementById("myForm").reset();
@@ -99,7 +100,7 @@
                     return firstPart + " " + delimiterValue + " " + secondPart;
                 } else {
                     // Check if semicolon exists in the original line
-                    var semicolonPosition = line.indexOf(';');
+                    var semicolonPosition = line.lastIndexOf(';');
                     if (semicolonPosition !== -1) {
                         // Insert semicolon at the same position in swapped line
                         return firstPart + " " + delimiterValue + " " + secondPart.substring(0, semicolonPosition) + ';' + secondPart.substring(semicolonPosition + 1);
