@@ -80,7 +80,7 @@
             var delimiterValue = document.getElementById("delimiter").value;
 
             if (delimiterValue.trim() === "") {
-                alert("Error: Delimiter field cannot be empty.");
+                document.getElementById("progress").value = "Error: Delimiter field cannot be empty.";
                 return;
             }
 
