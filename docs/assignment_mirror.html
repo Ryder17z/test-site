@@ -46,9 +46,8 @@
             <textarea id="ignoreLines" rows="2" placeholder="Enter lines to ignore..."></textarea>
 
             <!-- Checkbox for partial matching -->
-            <label>
-                <input type="checkbox" id="partialMatch"> Enable Partial Matching
-            </label>
+            <label for="partialMatch">Enable Partial Matching:</label>
+            <input type="checkbox" id="partialMatch">
         </div>
 
         <div>
@@ -116,13 +115,9 @@
                     return line;
                 }
 
-                var regex;
-
-                if (partialMatch) {
-                    regex = new RegExp('(' + escapedDelimiter + ')(.*?)(;)?', 'g');
-                } else {
-                    regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?');
-                }
+                var regex = partialMatch
+                    ? new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?$')
+                    : new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?$', 'g');
 
                 var match = line.match(regex);
 
