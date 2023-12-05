@@ -56,67 +56,65 @@
         </div>
     </form>
 
-<script>
-    function resetForm() {
-        document.getElementById("myForm").reset();
-        document.getElementById("progress").value = "";
-    }
-
-    function validateForm() {
-        var delimiterValue = document.getElementById("delimiter").value;
-        var progressField = document.getElementById("progress");
-
-        if (delimiterValue.trim() === "") {
-            progressField.value = "Error: Delimiter field cannot be empty.";
-            return false; // Prevent form submission
+    <script>
+        function resetForm() {
+            document.getElementById("myForm").reset();
+            document.getElementById("progress").value = "";
         }
 
-        // Clear any previous error messages
-        progressField.value = "";
-        return true; // Allow form submission
-    }
+        function validateForm() {
+            var delimiterValue = document.getElementById("delimiter").value;
+            var progressField = document.getElementById("progress");
 
-    function performSwap() {
-        var inputValue = document.getElementById("input").value;
-        var delimiterValue = document.getElementById("delimiter").value;
-        var outputField = document.getElementById("output");
-
-        if (inputValue.trim() === "") {
-            alert("Error: Input field cannot be empty.");
-            return;
-        }
-
-        var lines = inputValue.split('\n');
-        var swappedLines = lines.map(function (line) {
-            var parts = line.split(delimiterValue);
-
-            if (parts.length === 2) {
-                var firstPart = parts[1].trim();
-                var secondPart = parts[0].trim();
-
-                // Check if semicolon exists at the end of the second part
-                if (secondPart.endsWith(';')) {
-                    return firstPart + " " + delimiterValue + " " + secondPart;
-                } else {
-                    // Check if semicolon exists in the original line
-                    var semicolonPosition = line.lastIndexOf(';');
-                    if (semicolonPosition !== -1) {
-                        // Insert semicolon at the same position in swapped line
-                        return firstPart + " " + delimiterValue + " " + secondPart.substring(0, semicolonPosition) + ';' + secondPart.substring(semicolonPosition + 1);
-                    } else {
-                        return firstPart + " " + delimiterValue + " " + secondPart;
-                    }
-                }
-            } else {
-                return line;
+            if (delimiterValue.trim() === "") {
+                progressField.value = "Error: Delimiter field cannot be empty.";
+                return false; // Prevent form submission
             }
-        });
 
-        outputField.value = swappedLines.join('\n');
-    }
-</script>
+            // Clear any previous error messages
+            progressField.value = "";
+            return true; // Allow form submission
+        }
 
+        function performSwap() {
+            var inputValue = document.getElementById("input").value;
+            var delimiterValue = document.getElementById("delimiter").value;
+            var outputField = document.getElementById("output");
+            var progressField = document.getElementById("progress");
 
+            if (inputValue.trim() === "") {
+                alert("Error: Input field cannot be empty.");
+                return;
+            }
 
+            var lines = inputValue.split('\n');
+            var swappedLines = lines.map(function (line) {
+                var parts = line.split(delimiterValue);
+                if (parts.length === 2) {
+                    var firstPart = parts[1].trim();
+                    var secondPart = parts[0].trim();
+
+                    // Check if semicolon exists at the end of the second part
+                    if (secondPart.endsWith(';')) {
+                        return firstPart + " " + delimiterValue + " " + secondPart;
+                    } else {
+                        // Check if semicolon exists in the original line
+                        var semicolonPosition = line.lastIndexOf(';');
+                        if (semicolonPosition !== -1) {
+                            // Insert semicolon at the same position in swapped line
+                            return firstPart + " " + delimiterValue + " " + secondPart.substring(0, semicolonPosition) + ';' + secondPart.substring(semicolonPosition + 1);
+                        } else {
+                            return firstPart + " " + delimiterValue + " " + secondPart;
+                        }
+                    }
+                } else {
+                    return line;
+                }
+            });
+
+            outputField.value = swappedLines.join('\n');
+            progressField.value = "Swap completed!";
+        }
+    </script>
 </body>
 </html>
