@@ -72,7 +72,7 @@
         if (!verifyForm(formValues, formErrors)) {
             displayForm(formValues, formErrors);
         } else {
-            generateOutput(formValues);
+            processForm(formValues); // Call processForm instead of generateOutput
         }
     }
 
