@@ -3,101 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Mirror</title>
+    <title>Text Fields</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        textarea, input, progress {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <form id="myForm" onsubmit="return validateForm()">
+        <div>
+            <label for="input">Input (multiple lines):</label>
+            <textarea id="input" rows="4" placeholder="Enter multiple lines of text..."></textarea>
+
+            <label for="delimiter">Delimiter (single line):</label>
+            <input type="text" id="delimiter" placeholder="Enter a single line delimiter...">
+        </div>
+
+        <div>
+            <label for="output">Output (multiple lines):</label>
+            <textarea id="output" rows="4" readonly></textarea>
+
+            <label for="progress">Progress (multiple lines):</label>
+            <progress id="progress" max="100" value="0" readonly></progress>
+        </div>
+
+        <div class="button-container">
+            <button type="button" onclick="resetForm()">Reset</button>
+            <button type="button" onclick="performSwap()">Swap Sides</button>
+        </div>
+    </form>
 
 <script>
-    function verifyForm(values, errors) {
-        // Do all necessary form verification
-        if (values.text.length === 0) {
-            if (values.delimiter.length === 0) {
-                errors.push("Error: Input required!", "Error: Delimiter required!");
+    function resetForm() {
+        document.getElementById("myForm").reset();
+        document.getElementById("progress").value = "";
+    }
+
+    function validateForm() {
+        var delimiterValue = document.getElementById("delimiter").value;
+        var progressField = document.getElementById("progress");
+
+        if (delimiterValue.trim() === "") {
+            progressField.value = "Error: Delimiter field cannot be empty.";
+            return false; // Prevent form submission
+        }
+
+        // Clear any previous error messages
+        progressField.value = "";
+        return true; // Allow form submission
+    }
+
+    function performSwap() {
+        var inputValue = document.getElementById("input").value;
+        var delimiterValue = document.getElementById("delimiter").value;
+        var outputField = document.getElementById("output");
+
+        if (inputValue.trim() === "") {
+            alert("Error: Input field cannot be empty.");
+            return;
+        }
+
+        var lines = inputValue.split('\n');
+        var swappedLines = lines.map(function (line) {
+            var parts = line.split(delimiterValue);
+            if (parts.length === 2) {
+                var firstPart = parts[1].trim();
+                var secondPart = parts[0].trim();
+                
+                // Check if semicolon exists at the end of the second part
+                if (secondPart.endsWith(';')) {
+                    return firstPart + " " + delimiterValue + " " + secondPart;
+                } else {
+                    return firstPart + " " + delimiterValue + " " + secondPart + ';';
+                }
             } else {
-                errors.push("Error: Input required!");
-            }
-        } else if (values.delimiter.length === 0) {
-            errors.push("Error: Delimiter required!");
-        } else {
-            errors.push('Done!');
-        }
-        return errors.length === 0;
-    }
-
-    function displayForm(values, errors) {
-        document.write(`
-            <form id="myForm">
-                <div style="position: absolute; left:3%; top: 1%;">Input<br>
-                    <textarea name="text" rows="5" cols="67">${values.text}</textarea>
-                </div>
-                <div style="position: absolute; left:43%; top: 1%;">Delimiter<br>
-                    <input name="delimiter" type="text" value="${values.delimiter}">
-                </div>
-                <div style="position: absolute; left:43%; top: 9%;">
-                    <input type="submit" name="submit">
-                    <input type="reset" name="reset">
-                </div>
-            </form>
-
-            <div style="position: absolute; left:43%; top: 24%;">Progress<br>
-                <textarea disabled name="errorbox" rows="5" cols="67">${errors.join("\n")}</textarea>
-            </div>
-
-            <!-- Generated output -->
-            <div style="position: absolute; left:3%; top: 24%;">Output<br>
-                <textarea name="text" rows="5" cols="67" id="output">${values.output}</textarea>
-            </div>
-        `);
-
-        document.getElementById('myForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            handleFormSubmit();
-        });
-    }
-
-    function processForm(values) {
-        // Show input form again and the entered text
-        displayForm(values, []);
-        generateOutput(values);
-    }
-
-    function handleFormSubmit() {
-        const formValues = {
-            text: document.getElementsByName('text')[0].value,
-            delimiter: document.getElementsByName('delimiter')[0].value,
-            output: '', // Initialize output property
-        };
-        const formErrors = [];
-
-        if (!verifyForm(formValues, formErrors)) {
-            displayForm(formValues, formErrors);
-        } else {
-            processForm(formValues); // Call processForm instead of generateOutput
-        }
-    }
-
-    function generateOutput(values) {
-        const outputTextarea = document.getElementById('output');
-        outputTextarea.value = ''; // Clear previous content
-
-        if (values.text.length === 0 || values.delimiter.length === 0) {
-            return; // Output nothing except error message
-        }
-
-        const lines = values.text.replace(/\r/g, '').split('\n');
-        lines.forEach(line => {
-            const parts = line.split(values.delimiter);
-            const result = parts[1]?.trim() + values.delimiter + parts[0]?.trim() + ';\n';
-            if (result && result[0] !== values.delimiter) {
-                outputTextarea.value += result;
-            } else {
-                outputTextarea.value += parts[0] + '\n';
+                return line;
             }
         });
-    }
 
-    // Initial display
-    displayForm({ text: '', delimiter: '', output: '' }, []);
+        outputField.value = swappedLines.join('\n');
+    }
 </script>
 
 </body>
