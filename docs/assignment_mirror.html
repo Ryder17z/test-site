@@ -98,25 +98,14 @@
 
             var lines = inputValue.split('\n');
             var swappedLines = lines.map(function (line) {
-                var parts = line.split(new RegExp(escapedDelimiter));
+                var regex = new RegExp('(.*?)' + escapedDelimiter + '(.*?);?$');
+                var match = line.match(regex);
 
-                if (parts.length === 2) {
-                    var firstPart = parts[1].trim();
-                    var secondPart = parts[0].trim();
+                if (match) {
+                    var firstPart = match[2].trim();
+                    var secondPart = match[1].trim();
 
-                    // Check if semicolon exists at the end of the second part
-                    if (secondPart.endsWith(';')) {
-                        return firstPart + " " + delimiterValue + " " + secondPart;
-                    } else {
-                        // Check if semicolon exists in the original line
-                        var semicolonPosition = line.lastIndexOf(';');
-                        if (semicolonPosition !== -1) {
-                            // Insert semicolon at the same position in swapped line
-                            return firstPart + " " + delimiterValue + " " + secondPart.substring(0, semicolonPosition) + ';' + secondPart.substring(semicolonPosition + 1);
-                        } else {
-                            return firstPart + " " + delimiterValue + " " + secondPart;
-                        }
-                    }
+                    return firstPart + " " + delimiterValue + " " + secondPart + ';';
                 } else {
                     return line;
                 }
