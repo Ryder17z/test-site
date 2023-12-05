@@ -86,7 +86,9 @@
 
 
 
-        function performSwap() {
+
+        
+function performSwap() {
     var delimiterValue = document.getElementById("delimiter").value;
     var ignoreLinesValue = document.getElementById("ignoreLines").value;
     var partialMatchCheckbox = document.getElementById("partialMatch");
@@ -119,8 +121,8 @@
         }
 
         var regexPattern = partialMatch
-            ? '^(.*?)(?:' + escapedDelimiter + ')(.*?)(;)?$'
-            : '^(.*?)' + escapedDelimiter + '(.*?)(;)?$';
+            ? '^([^' + escapedDelimiter + ']*)' + escapedDelimiter + '(.*)$'
+            : '^(.*?)' + escapedDelimiter + '(.*)$';
 
         var regex = new RegExp(regexPattern);
         var match = line.match(regex);
@@ -129,7 +131,7 @@
             var firstPart = match[2].trim();
             var secondPart = match[1].trim();
 
-            return firstPart + " " + delimiterValue + " " + secondPart + (match[3] || '');
+            return firstPart + " " + delimiterValue + " " + secondPart;
         } else {
             return line;
         }
@@ -138,6 +140,7 @@
     outputField.value = swappedLines.join('\n');
     progressField.value = "Swap completed with delimiter: '" + delimiterValue + "'";
 }
+
 
 
         
