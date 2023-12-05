@@ -98,7 +98,7 @@
 
             var lines = inputValue.split('\n');
             var swappedLines = lines.map(function (line) {
-                var regex = new RegExp('(.*?)' + escapedDelimiter + '(.*?);?$');
+                var regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?);?$');
                 var match = line.match(regex);
 
                 if (match) {
