@@ -45,7 +45,7 @@
 
             <!-- Generated output -->
             <div style="position: absolute; left:3%; top: 24%;">Output<br>
-                <textarea name="text" rows="5" cols="67" id="output"></textarea>
+                <textarea name="text" rows="5" cols="67" id="output">${values.output}</textarea>
             </div>
         `);
 
@@ -71,7 +71,7 @@
         if (!verifyForm(formValues, formErrors)) {
             displayForm(formValues, formErrors);
         } else {
-            processForm(formValues);
+            generateOutput(formValues);
         }
     }
 
@@ -96,7 +96,7 @@
     }
 
     // Initial display
-    displayForm({ text: '', delimiter: '' }, []);
+    displayForm({ text: '', delimiter: '', output: '' }, []);
 </script>
 
 </body>
