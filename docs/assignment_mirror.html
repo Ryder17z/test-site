@@ -93,9 +93,13 @@
                 return;
             }
 
+            // Escape special characters in the delimiter for use in a regular expression
+            var escapedDelimiter = delimiterValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
             var lines = inputValue.split('\n');
             var swappedLines = lines.map(function (line) {
-                var parts = line.split(delimiterValue);
+                var parts = line.split(new RegExp(escapedDelimiter));
+
                 if (parts.length === 2) {
                     var firstPart = parts[1].trim();
                     var secondPart = parts[0].trim();
