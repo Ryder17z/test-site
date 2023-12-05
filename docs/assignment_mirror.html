@@ -77,8 +77,14 @@
         }
 
         function performSwap() {
-            var inputValue = document.getElementById("input").value;
             var delimiterValue = document.getElementById("delimiter").value;
+
+            if (delimiterValue.trim() === "") {
+                alert("Error: Delimiter field cannot be empty.");
+                return;
+            }
+
+            var inputValue = document.getElementById("input").value;
             var outputField = document.getElementById("output");
             var progressField = document.getElementById("progress");
 
