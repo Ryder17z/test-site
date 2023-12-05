@@ -44,6 +44,11 @@
             <!-- New input for "ignore lines starting with" -->
             <label for="ignoreLines">Ignore lines starting with:</label>
             <textarea id="ignoreLines" rows="2" placeholder="Enter lines to ignore..."></textarea>
+
+            <!-- Checkbox for partial matching -->
+            <label>
+                <input type="checkbox" id="partialMatch"> Enable Partial Matching
+            </label>
         </div>
 
         <div>
@@ -83,6 +88,7 @@
         function performSwap() {
             var delimiterValue = document.getElementById("delimiter").value;
             var ignoreLinesValue = document.getElementById("ignoreLines").value;
+            var partialMatchCheckbox = document.getElementById("partialMatch");
 
             if (delimiterValue.trim() === "") {
                 document.getElementById("progress").value = "Error: Delimiter field cannot be empty.";
@@ -102,6 +108,7 @@
             var escapedDelimiter = escapeRegExp(delimiterValue);
 
             var ignoreLinesRegex = new RegExp('^(' + ignoreLinesValue.trim().split('\n').map(escapeRegExp).join('|') + ').*$', 'gm');
+            var partialMatch = partialMatchCheckbox.checked;
 
             var lines = inputValue.split('\n');
             var swappedLines = lines.map(function (line) {
@@ -109,7 +116,14 @@
                     return line;
                 }
 
-                var regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?$');
+                var regex;
+
+                if (partialMatch) {
+                    regex = new RegExp('(' + escapedDelimiter + ')(.*?)(;)?', 'g');
+                } else {
+                    regex = new RegExp('^(.*?)' + escapedDelimiter + '(.*?)(;)?');
+                }
+
                 var match = line.match(regex);
 
                 if (match) {
