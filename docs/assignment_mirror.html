@@ -94,7 +94,7 @@
             }
 
             // Escape special characters in the delimiter for use in a regular expression
-            var escapedDelimiter = delimiterValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            var escapedDelimiter = escapeRegExp(delimiterValue);
 
             var lines = inputValue.split('\n');
             var swappedLines = lines.map(function (line) {
@@ -124,6 +124,11 @@
 
             outputField.value = swappedLines.join('\n');
             progressField.value = "Swap completed with delimiter: '" + delimiterValue + "'";
+        }
+
+        // Function to escape special characters in a string for use in a regular expression
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
     </script>
 </body>
