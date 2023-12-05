@@ -15,7 +15,7 @@
             margin-bottom: 5px;
         }
 
-        textarea, input, progress {
+        textarea, input {
             width: 100%;
             padding: 5px;
             margin-bottom: 10px;
@@ -47,7 +47,7 @@
             <textarea id="output" rows="4" readonly></textarea>
 
             <label for="progress">Progress (multiple lines):</label>
-            <progress id="progress" max="100" value="0" readonly></progress>
+            <textarea id="progress" rows="4" readonly></textarea>
         </div>
 
         <div class="button-container">
@@ -55,7 +55,6 @@
             <button type="button" onclick="performSwap()">Swap Sides</button>
         </div>
     </form>
-
 
 <script>
     function resetForm() {
