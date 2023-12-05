@@ -117,7 +117,7 @@
 
                 var regexPattern = partialMatch
     ? '^(.*?)(?:' + escapedDelimiter + ')(.*?)(;)?$'
-    : '^(.*?)' + escapedDelimiter + '(.*?)(;)?$';
+    : '^(.*?)(?:' + escapedDelimiter + ')(.*?)(;)?$';
 
 var regex = new RegExp(regexPattern);
 var match = line.match(regex);
