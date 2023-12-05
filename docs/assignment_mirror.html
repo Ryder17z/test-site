@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Mirror</title>
+</head>
+<body>
+
+<script>
+    function verifyForm(values, errors) {
+        // Do all necessary form verification
+        if (values.text.length === 0) {
+            if (values.delimiter.length === 0) {
+                errors.push("Error: Input required!", "Error: Delimiter required!");
+            } else {
+                errors.push("Error: Input required!");
+            }
+        } else if (values.delimiter.length === 0) {
+            errors.push("Error: Delimiter required!");
+        } else {
+            errors.push('Done!');
+        }
+        return errors.length === 0;
+    }
+
+    function displayForm(values, errors) {
+        document.write(`
+            <form id="myForm">
+                <div style="position: absolute; left:3%; top: 1%;">Input<br>
+                    <textarea name="text" rows="5" cols="67">${values.text}</textarea>
+                </div>
+                <div style="position: absolute; left:43%; top: 1%;">Delimiter<br>
+                    <input name="delimiter" type="text" value="${values.delimiter}">
+                </div>
+                <div style="position: absolute; left:43%; top: 9%;">
+                    <input type="submit" name="submit">
+                    <input type="reset" name="reset">
+                </div>
+            </form>
+
+            <div style="position: absolute; left:43%; top: 24%;">Progress<br>
+                <textarea disabled name="errorbox" rows="5" cols="67">${errors.join("\n")}</textarea>
+            </div>
+
+            <!-- Generated output -->
+            <div style="position: absolute; left:3%; top: 24%;">Output<br>
+                <textarea name="text" rows="5" cols="67" id="output"></textarea>
+            </div>
+        `);
+
+        document.getElementById('myForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            handleFormSubmit();
+        });
+    }
+
+    function processForm(values) {
+        // Show input form again and the entered text
+        displayForm(values, []);
+        generateOutput(values);
+    }
+
+    function handleFormSubmit() {
+        const formValues = {
+            text: document.getElementsByName('text')[0].value,
+            delimiter: document.getElementsByName('delimiter')[0].value,
+        };
+        const formErrors = [];
+
+        if (!verifyForm(formValues, formErrors)) {
+            displayForm(formValues, formErrors);
+        } else {
+            processForm(formValues);
+        }
+    }
+
+    function generateOutput(values) {
+        const outputTextarea = document.getElementById('output');
+        outputTextarea.value = ''; // Clear previous content
+
+        if (values.text.length === 0 || values.delimiter.length === 0) {
+            return; // Output nothing except error message
+        }
+
+        const lines = values.text.replace(/\r/g, '').split('\n');
+        lines.forEach(line => {
+            const parts = line.split(values.delimiter);
+            const result = parts[1]?.trim() + values.delimiter + parts[0]?.trim() + ';\n';
+            if (result && result[0] !== values.delimiter) {
+                outputTextarea.value += result;
+            } else {
+                outputTextarea.value += parts[0] + '\n';
+            }
+        });
+    }
+
+    // Initial display
+    displayForm({ text: '', delimiter: '' }, []);
+</script>
+
+</body>
+</html>
