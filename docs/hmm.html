@@ -9,16 +9,27 @@
     Background color:
     <input type="text" id="bgInput" placeholder="Enter background color">
     <br>
+    Tier Names:
+    <br>
+    <textarea id="catsInput" placeholder="Enter text\n(max 200 characters total)" rows="16"></textarea>
+    <br>
     Items:
     <br>
-    <textarea id="itemsFieldInput" placeholder="Enter text\n(max 200 characters total)" rows="6"></textarea>
+    <textarea id="itemsInput" placeholder="Enter text\n(max 200 characters total)" rows="16"></textarea>
     <br>
     <button id="updateUrlBtn">Submit</button>
 
     <script>
         $(document).ready(function () {
-            // Enforce character limit in the textarea
-            $('#itemFieldInput').on('input', function () {
+            // Enforce character limit in the textareas: item list, category list
+            $('#itemsInput').on('input', function () {
+                const maxLength = 50;
+                const currentText = $(this).val();
+                if (currentText.length > maxLength) {
+                    $(this).val(currentText.substring(0, maxLength));
+                }
+            });
+            $('#catsInput').on('input', function () {
                 const maxLength = 50;
                 const currentText = $(this).val();
                 if (currentText.length > maxLength) {
@@ -28,7 +39,8 @@
 
             $('#updateUrlBtn').click(function () {
                 const newBg = $('#bgInput').val();
-                const newText = $('#itemsFieldInput').val();
+                const newItems = $('#itemsInput').val();
+                const newCats = $('#catsInput').val();
                 let newUrl = `${window.location.origin}${window.location.pathname}`;
                 const params = new URLSearchParams();
 
@@ -36,8 +48,12 @@
                     params.set('bg', newBg);
                     $('body').css('background-color', newBg); // Set background color
                 }
-                if (newText) {
-                    params.set('items', newText);
+                if (newItems) {
+                    params.set('items', newItems);
+                }
+
+                if (newItems) {
+                    params.set('cats', newCats);
                 }
 
                 if (params.toString()) {
