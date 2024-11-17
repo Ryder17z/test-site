@@ -6,15 +6,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    background color:
+    Background color:
     <input type="text" id="bgInput" placeholder="Enter background color">
     <br>
     Item:
-    <input type="text" id="itemFieldInput" placeholder="Enter text">
+    <textarea id="itemFieldInput" placeholder="Enter text (max 50 characters)" rows="3"></textarea>
+    <br>
     <button id="updateUrlBtn">Submit</button>
 
     <script>
         $(document).ready(function () {
+            // Enforce character limit in the textarea
+            $('#itemFieldInput').on('input', function () {
+                const maxLength = 50;
+                const currentText = $(this).val();
+                if (currentText.length > maxLength) {
+                    $(this).val(currentText.substring(0, maxLength));
+                }
+            });
+
             $('#updateUrlBtn').click(function () {
                 const newBg = $('#bgInput').val();
                 const newText = $('#itemFieldInput').val();
@@ -36,6 +46,13 @@
                 window.history.pushState(null, '', newUrl);
                 console.log('URL updated:', newUrl); // Debugging output
             });
+
+            // Set background color on page load if 'bg' exists in URL
+            const params = new URLSearchParams(window.location.search);
+            const bgColor = params.get('bg');
+            if (bgColor) {
+                $('body').css('background-color', bgColor);
+            }
         });
     </script>
 </body>
