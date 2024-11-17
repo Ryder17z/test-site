@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic URL Update</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    background color:
+    <input type="text" id="bgInput" placeholder="Enter background color">
+    <br>
+    Item:
+    <input type="text" id="itemFieldInput" placeholder="Enter text">
+    <button id="updateUrlBtn">Submit</button>
+
+    <script>
+        $(document).ready(function () {
+            $('#updateUrlBtn').click(function () {
+                const newBg = $('#bgInput').val();
+                const newText = $('#itemFieldInput').val();
+                let newUrl = `${window.location.origin}${window.location.pathname}`;
+                const params = new URLSearchParams();
+
+                if (newBg) {
+                    params.set('bg', newBg);
+                }
+                if (newText) {
+                    params.set('item', newText);
+                }
+
+                if (params.toString()) {
+                    newUrl += `?${params.toString()}`;
+                }
+
+                window.history.pushState(null, '', newUrl);
+                console.log('URL updated:', newUrl); // Debugging output
+            });
+        });
+    </script>
+</body>
+</html>
