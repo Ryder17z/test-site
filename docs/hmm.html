@@ -9,8 +9,9 @@
     Background color:
     <input type="text" id="bgInput" placeholder="Enter background color">
     <br>
-    Item:
-    <textarea id="itemFieldInput" placeholder="Enter text (max 50 characters)" rows="3"></textarea>
+    Items:
+    <br>
+    <textarea id="itemsFieldInput" placeholder="Enter text\n(max 200 characters total)" rows="6"></textarea>
     <br>
     <button id="updateUrlBtn">Submit</button>
 
@@ -27,7 +28,7 @@
 
             $('#updateUrlBtn').click(function () {
                 const newBg = $('#bgInput').val();
-                const newText = $('#itemFieldInput').val();
+                const newText = $('#itemsFieldInput').val();
                 let newUrl = `${window.location.origin}${window.location.pathname}`;
                 const params = new URLSearchParams();
 
@@ -36,7 +37,7 @@
                     $('body').css('background-color', newBg); // Set background color
                 }
                 if (newText) {
-                    params.set('item', newText);
+                    params.set('items', newText);
                 }
 
                 if (params.toString()) {
