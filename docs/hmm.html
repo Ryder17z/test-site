@@ -4,32 +4,64 @@
     <meta charset="UTF-8">
     <title>Dynamic URL Update</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #leftColumn {
+            width: 15%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-right: 1px solid #ddd;
+        }
+
+        #rightColumn {
+            flex-grow: 1;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        textarea, input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        .outputLine {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    Background color:
-    <input type="text" id="bgInput" placeholder="Enter background color">
-    <br>
-    Tier Names:
-    <br>
-    <textarea id="catsInput" placeholder="Enter text\n(max 200 characters total)" rows="16"></textarea>
-    <br>
-    Items:
-    <br>
-    <textarea id="itemsInput" placeholder="Enter text\n(max 200 characters total)" rows="16"></textarea>
-    <br>
-    <button id="updateUrlBtn">Submit</button>
+    <div id="leftColumn">
+        Background color:
+        <input type="text" id="bgInput" placeholder="Enter background color">
+        <br>
+        Tier Names:
+        <br>
+        <textarea id="catsInput" placeholder="Enter text\n(max 200 characters total)" rows="10"></textarea>
+        <br>
+        Items:
+        <br>
+        <textarea id="itemsInput" placeholder="Enter text\n(max 200 characters total)" rows="10"></textarea>
+        <br>
+        <button id="updateUrlBtn">Submit</button>
+    </div>
+    <div id="rightColumn">
+        <h3>Categories and Items:</h3>
+        <div id="output"></div>
+    </div>
 
     <script>
         $(document).ready(function () {
-            // Enforce character limit in the textareas: item list, category list
-            $('#itemsInput').on('input', function () {
-                const maxLength = 50;
-                const currentText = $(this).val();
-                if (currentText.length > maxLength) {
-                    $(this).val(currentText.substring(0, maxLength));
-                }
-            });
-            $('#catsInput').on('input', function () {
+            // Enforce character limit in the textareas
+            $('#itemsInput, #catsInput').on('input', function () {
                 const maxLength = 50;
                 const currentText = $(this).val();
                 if (currentText.length > maxLength) {
@@ -39,21 +71,20 @@
 
             $('#updateUrlBtn').click(function () {
                 const newBg = $('#bgInput').val();
-                const newItems = $('#itemsInput').val();
-                const newCats = $('#catsInput').val();
+                const newItems = $('#itemsInput').val().split('\n');
+                const newCats = $('#catsInput').val().split('\n');
                 let newUrl = `${window.location.origin}${window.location.pathname}`;
                 const params = new URLSearchParams();
 
                 if (newBg) {
                     params.set('bg', newBg);
-                    $('body').css('background-color', newBg); // Set background color
+                    $('body').css('background-color', newBg);
                 }
-                if (newItems) {
-                    params.set('items', newItems);
+                if (newItems.length) {
+                    params.set('items', newItems.join(','));
                 }
-
-                if (newItems) {
-                    params.set('cats', newCats);
+                if (newCats.length) {
+                    params.set('cats', newCats.join(','));
                 }
 
                 if (params.toString()) {
@@ -61,7 +92,15 @@
                 }
 
                 window.history.pushState(null, '', newUrl);
-                console.log('URL updated:', newUrl); // Debugging output
+
+                // Update output
+                const $output = $('#output');
+                $output.empty();
+                for (let i = 0; i < Math.max(newCats.length, newItems.length); i++) {
+                    const category = newCats[i] || '';
+                    const item = newItems[i] || '';
+                    $output.append(`<div class="outputLine">${category} : ${item}</div>`);
+                }
             });
 
             // Set background color on page load if 'bg' exists in URL
